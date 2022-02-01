@@ -4,6 +4,8 @@ _("long" in Esperanto)_
 
 Simple, small single-user URL shortner app built with Go + an admin interface in React.
 
+![Screenshot of admin dashboard](./screenshot.png)
+
 ## To-Do
 
 - [ ] Back-end

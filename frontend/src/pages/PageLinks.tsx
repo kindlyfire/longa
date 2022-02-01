@@ -12,7 +12,11 @@ const columns = [
 	{
 		name: 'Short URL',
 		cell: (row: Link) => (
-			<a className="underline" href={'/' + row.link} target="_blank">
+			<a
+				className="underline whitespace-nowrap overflow-hidden text-ellipsis"
+				href={'/' + row.link}
+				target="_blank"
+			>
 				{row.link}
 			</a>
 		)
@@ -21,7 +25,11 @@ const columns = [
 		name: 'Long URL',
 		selector: (row: Link) => row.target,
 		cell: (row: Link) => (
-			<a className="underline" href={row.target} target="_blank">
+			<a
+				className="underline whitespace-nowrap overflow-hidden text-ellipsis"
+				href={row.target}
+				target="_blank"
+			>
 				{row.target}
 			</a>
 		)
@@ -49,6 +57,8 @@ function AddLinksForm() {
 	const create = useMutation('linkCreate', async () => {
 		await Api.linksCreate({ link: shortUrl, target: longUrl })
 		queryClient.invalidateQueries('links')
+		setLongUrl('')
+		setShortUrl('')
 	})
 
 	return (

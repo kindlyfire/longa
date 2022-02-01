@@ -1,0 +1,5 @@
+database_uri = "file:data.db?cache=shared&_fk=1"
+listen_addr = ":3000"
+home_redirect = "https://github.com/kindlyfire/longa"
+username = "admin"
+password = "admin"

@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/kindlyfire/longa/ent"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -31,11 +33,16 @@ func main() {
 
 	e := echo.New()
 	e.HideBanner = true
+
 	e.GET("/_/api/links", routeGetLinks, checkAuth)
 	e.POST("/_/api/links", routeCreateLink, checkAuth)
 	e.POST("/_/api/links/:id", routeUpdateLink, checkAuth)
 	e.DELETE("/_/api/links/:id", routeDeleteLink, checkAuth)
 	e.GET("/:link", routeAccessLink)
+
+	// Static files
+	contentHandler := echo.WrapHandler(http.FileServer(http.FS(frontendContent)))
+	e.GET("/_/*", contentHandler, middleware.Rewrite(map[string]string{"/_/*": "/frontend/dist/$1"}))
 
 	e.Logger.Fatal(e.Start(config.ListenAddr))
 }

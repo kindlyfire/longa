@@ -3,11 +3,15 @@
 	"version": "1.0.0",
 	"license": "MPL-2.0",
 	"scripts": {
-		"dev": "parcel serve",
-		"build": "parcel build"
+		"dev": "parcel serve --target default",
+		"build": "parcel build --target prod"
 	},
 	"targets": {
 		"default": {
+			"source": "index.html",
+			"distDir": "./dist"
+		},
+		"prod": {
 			"source": "index.html",
 			"publicUrl": "/_/",
 			"distDir": "./dist"

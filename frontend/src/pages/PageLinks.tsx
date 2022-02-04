@@ -11,7 +11,10 @@ import { queryClient } from '../state/query-client'
 export function PageLinks() {
 	return (
 		<>
+			<h2 className="font-bold text-xl mb-4">Create</h2>
 			<AddLinksForm />
+
+			<h2 className="font-bold text-xl mb-4">Links</h2>
 			<LinksTable />
 		</>
 	)
@@ -101,6 +104,7 @@ function LinksTable() {
 	const [page, setPage] = useState(0)
 	const [selectedRows, setSelectedRows] = useState([] as Link[])
 	const [toggleCleared, setToggleCleared] = useState(false)
+	const [searchString, setSearchString] = useState('')
 	const links = useQuery(['links', page], () =>
 		Api.linksList({ offset: page * 15 })
 	)
@@ -116,9 +120,16 @@ function LinksTable() {
 		setSelectedRows([])
 	})
 
+	const displayLinks =
+		(searchString
+			? links.data?.links.filter(
+					l => l.link.includes(searchString) || l.target.includes(searchString)
+			  )
+			: links.data?.links) ?? []
+
 	return (
 		<>
-			<div className="flex items-center mb-2">
+			<div className="flex items-center mb-4">
 				<Button
 					color="red"
 					size="sm"
@@ -131,10 +142,17 @@ function LinksTable() {
 				<div>
 					{selectedRows.length} row{selectedRows.length !== 1 && 's'} selected
 				</div>
+				<div className="ml-auto">
+					<Input
+						placeholder="Search"
+						inputClassName="py-1"
+						value={[searchString, setSearchString]}
+					/>
+				</div>
 			</div>
 			<DataTable
 				columns={linksTableColumns}
-				data={links.data?.links || []}
+				data={displayLinks}
 				dense
 				selectableRows
 				selectableRowsVisibleOnly

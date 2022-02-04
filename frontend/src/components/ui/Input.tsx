@@ -7,6 +7,7 @@ interface InputProps {
 
 	type?: React.HTMLInputTypeAttribute
 	value?: [string, (v: string) => any]
+	placeholder?: string
 	disabled?: boolean
 	inputClassName?: string
 }
@@ -21,6 +22,7 @@ export function Input(props: InputProps) {
 			<input
 				type={props.type || 'text'}
 				value={props.value?.[0]}
+				placeholder={props.placeholder}
 				onInput={e => props.value?.[1](e.currentTarget.value)}
 				disabled={props.disabled}
 				className={clsx(

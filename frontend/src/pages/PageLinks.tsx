@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { useState } from 'react'
-import DataTable from 'react-data-table-component'
+import DataTable, { ExpanderComponentProps } from 'react-data-table-component'
 import { useMutation, useQuery } from 'react-query'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
@@ -21,13 +21,13 @@ export function PageLinks() {
 }
 
 function AddLinksForm() {
-	const [longUrl, setLongUrl] = useState('')
+	const [targetUrl, setTargetUrl] = useState('')
 	const [shortUrl, setShortUrl] = useState('')
 
 	const create = useMutation('linkCreate', async () => {
-		await Api.linksCreate({ link: shortUrl, target: longUrl })
+		await Api.linksCreate({ link: shortUrl, target: targetUrl })
 		queryClient.invalidateQueries('links')
-		setLongUrl('')
+		setTargetUrl('')
 		setShortUrl('')
 	})
 
@@ -47,7 +47,7 @@ function AddLinksForm() {
 			>
 				<div className="md:grid grid-cols-6 gap-4 mb-4">
 					<div className="col-span-3">
-						<Input label="Long URL" value={[longUrl, setLongUrl]} />
+						<Input label="Target URL" value={[targetUrl, setTargetUrl]} />
 					</div>
 					<div className="col-span-2 mt-4 md:mt-0">
 						<Input label="Short URL" value={[shortUrl, setShortUrl]} />
@@ -55,7 +55,7 @@ function AddLinksForm() {
 					<div className="flex items-end mt-4 md:mt-0">
 						<Button
 							className="w-full"
-							disabled={longUrl === '' || shortUrl === '' || create.isLoading}
+							disabled={targetUrl === '' || shortUrl === '' || create.isLoading}
 						>
 							Add
 						</Button>
@@ -80,7 +80,7 @@ const linksTableColumns = [
 		)
 	},
 	{
-		name: 'Long URL',
+		name: 'Target URL',
 		selector: (row: Link) => row.target,
 		cell: (row: Link) => (
 			<a
@@ -161,6 +161,8 @@ function LinksTable() {
 				pagination
 				paginationTotalRows={links.data?.count}
 				paginationRowsPerPageOptions={[15, 30, 50, 100, 250, 500]}
+				expandableRows
+				expandableRowsComponent={LinksTableEdit}
 				customStyles={{
 					rows: {
 						denseStyle: {
@@ -175,5 +177,55 @@ function LinksTable() {
 				}}
 			></DataTable>
 		</>
+	)
+}
+
+function LinksTableEdit(props: ExpanderComponentProps<Link>) {
+	const [targetUrl, setTargetUrl] = useState(props.data.target)
+	const [shortUrl, setShortUrl] = useState(props.data.link)
+
+	const update = useMutation('linkUpdate', async () => {
+		await Api.linksUpdate({ ...props.data, link: shortUrl, target: targetUrl })
+		queryClient.invalidateQueries('links')
+	})
+
+	return (
+		<div className="m-2">
+			{update.isError && (
+				<p className="mb-4 bg-red-600 text-white rounded p-2 px-3 shadow font-semibold">
+					{'' + update.error}
+				</p>
+			)}
+
+			<form
+				onSubmit={e => {
+					e.preventDefault()
+					update.mutate()
+				}}
+			>
+				<div className="md:grid grid-cols-6 gap-4 mb-4">
+					<div className="col-span-3">
+						<Input label="Target URL" value={[targetUrl, setTargetUrl]} />
+					</div>
+					<div className="col-span-2 mt-4 md:mt-0">
+						<Input label="Short URL" value={[shortUrl, setShortUrl]} />
+					</div>
+					<div className="flex items-end mt-4 md:mt-0">
+						<Button
+							className="w-full"
+							disabled={
+								targetUrl === '' ||
+								shortUrl === '' ||
+								update.isLoading ||
+								(targetUrl === props.data.target &&
+									shortUrl === props.data.link)
+							}
+						>
+							Save
+						</Button>
+					</div>
+				</div>
+			</form>
+		</div>
 	)
 }

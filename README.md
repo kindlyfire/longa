@@ -6,12 +6,6 @@ Simple, small single-user URL shortner app built with Go + an admin interface in
 
 ![Screenshot of admin dashboard](./screenshot.png)
 
-## To-Do
-
-The app is fully usable, with the following still missing features:
-
-- [ ] Update links
-
 ## Building from source
 
 Requires: Go 1.17, GCC (for sqlite), NodeJS, Yarn

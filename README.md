@@ -8,22 +8,9 @@ Simple, small single-user URL shortner app built with Go + an admin interface in
 
 ## To-Do
 
-- [ ] Back-end
-  - [x] Config from toml files or env variables
-  - [x] SQLite Database
-  - [x] Authentication
-  - [x] List, create, update and delete links
-    - [ ] Add pagination and search to list endpoint
-  - [x] Functional redirects
-- [ ] Front-end
-  - [x] Authentication
-  - [x] List links
-    - [ ] Move pagination to server-side
-    - [ ] Search
-  - [x] Create link
-  - [x] Delete link
-  - [ ] Update link
-  - [x] Mobile friendly
+The app is fully usable, with the following still missing features:
+
+- [ ] Update links
 
 ## Building from source
 

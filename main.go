@@ -34,6 +34,7 @@ func main() {
 	e := echo.New()
 	e.HideBanner = true
 
+	e.GET("/", routeIndex)
 	e.GET("/_/api/links", routeGetLinks, checkAuth)
 	e.POST("/_/api/links", routeCreateLink, checkAuth)
 	e.POST("/_/api/links/:id", routeUpdateLink, checkAuth)

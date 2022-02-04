@@ -9,6 +9,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+func routeIndex(c echo.Context) error {
+	return c.Redirect(302, config.HomeRedirect)
+}
+
 func routeAccessLink(c echo.Context) error {
 	link, err := client.Link.
 		Query().

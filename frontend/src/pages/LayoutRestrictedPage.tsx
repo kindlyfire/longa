@@ -13,6 +13,10 @@ export function LayoutRestrictedPage() {
 			return Api.checkAuth(userState.username, userState.password).catch(
 				e => false
 			)
+		},
+		{
+			retry: false,
+			refetchOnWindowFocus: false
 		}
 	)
 
